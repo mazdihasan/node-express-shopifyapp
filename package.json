@@ -4,12 +4,21 @@
   "description": "Node Express Liquid shopify app frame-work",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon app.js"
   },
-  "keywords": ["node","express", "liquid", "shopify app" ],
+  "keywords": [
+    "node",
+    "express",
+    "liquid",
+    "shopify app"
+  ],
   "author": "Md Mazdi Hasan",
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.2"
+  },
+  "devDependencies": {
+    "dotenv": "^14.2.0",
+    "nodemon": "^2.0.15"
   }
 }
