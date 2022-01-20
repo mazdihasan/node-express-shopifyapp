@@ -9,6 +9,8 @@ const dbConnect = require('./lib/dbCon');
 const app = require("liquid-express")(express());
 // middleware
 app.use(cookieParser());
+app.use(express.static('public'));
+// routes
 app.get('/', (req, res) => {
     // @test
     // console.log(req.query);
@@ -72,13 +74,11 @@ app.get('/auth/callback', async(req, res) => {
      }
      res.cookie('shop', shop);
 
-     // set app billing
-
      // set script tags
-
+     let scriptData = lib.setScriptTag(shop, token, 'test.js');
      // set webhooks
 
-     //res.send(accessToken);
+     // set app billing
 
      // redirect to app dashboard
      res.redirect('/');

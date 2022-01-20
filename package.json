@@ -22,7 +22,8 @@
     "liquid-express": "^1.0.0",
     "mongoose": "^6.1.7",
     "nonce": "^1.0.4",
-    "querystring": "^0.2.1"
+    "querystring": "^0.2.1",
+    "shopify-api-node": "^3.8.1"
   },
   "devDependencies": {
     "dotenv": "^14.2.0",
