@@ -15,7 +15,13 @@
   "author": "Md Mazdi Hasan",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.2"
+    "axios": "^0.25.0",
+    "cookie-parser": "^1.4.6",
+    "express": "^4.17.2",
+    "liquid": "^5.1.1",
+    "liquid-express": "^1.0.0",
+    "nonce": "^1.0.4",
+    "querystring": "^0.2.1"
   },
   "devDependencies": {
     "dotenv": "^14.2.0",
