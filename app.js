@@ -5,7 +5,7 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const nonce = require('nonce')();
 const lib = require('./lib/lib');
-
+const dbConnect = require('./lib/dbCon');
 const app = require("liquid-express")(express());
 // middleware
 app.use(cookieParser());
@@ -56,7 +56,7 @@ app.get('/auth/callback', async(req, res) => {
         return res.status(403).send('Something wrong, try to install again');
     }
     // verify hmac
-    //let verifyHmac = lib.verifyHmac(req, hmac, process.env.APP_API_SECRET);
+    //let verifyHmac = lib.verifyHmac(req, hmac);
      if(!lib.verifyHmac(req, hmac)){
         return res.status(400).send('Sorry HMAC validation failed');
      }
@@ -65,8 +65,12 @@ app.get('/auth/callback', async(req, res) => {
      if(!accessToken){
         return res.status(400).send('Sorry can\'t get shop access token');
      }
-     //save access token on database or cookie
-     res.cookie('shop_token', accessToken);
+     //save access token on database and set cookie
+     let spData = await lib.saveToken(accessToken, shop);
+     if(!spData.success){
+        return res.status(400).send('Sorry access token not saved'); 
+     }
+     res.cookie('shop', shop);
 
      // set app billing
 
@@ -79,6 +83,9 @@ app.get('/auth/callback', async(req, res) => {
      // redirect to app dashboard
      res.redirect('/');
 });
+
+//connect to database
+dbConnect();
 
 // run server
 const PORT = process.env.PORT || 5000; 

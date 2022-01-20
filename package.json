@@ -20,6 +20,7 @@
     "express": "^4.17.2",
     "liquid": "^5.1.1",
     "liquid-express": "^1.0.0",
+    "mongoose": "^6.1.7",
     "nonce": "^1.0.4",
     "querystring": "^0.2.1"
   },
