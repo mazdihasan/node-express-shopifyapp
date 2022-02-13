@@ -8,6 +8,10 @@ import dbConnect from './lib/dbCon.js';
 import settings from './appSettings.js';
 import { Shopify, DataType } from '@shopify/shopify-api';
 const app = express();
+// middleware
+app.use(cookieParser());
+app.use(express.static('public'));
+
 const { API_KEY, API_SECRET_KEY, SCOPES, SHOP } = process.env;
 // initialize the shopify api
 Shopify.Context.initialize({
@@ -17,9 +21,11 @@ Shopify.Context.initialize({
   HOST_NAME: SHOP.replace(/https:\/\//, ""),
   IS_EMBEDDED_APP: true
 });
-// middleware
-app.use(cookieParser());
-app.use(express.static('public'));
+// set webhook handlers
+Shopify.Webhooks.Registry.addHandler('ORDERS_PAID', {
+    path: "/webhooks",
+    webhookHandler: handleWebhookRequest,
+});
 // routes
 app.get('/', (req, res) => {
 
@@ -53,7 +59,7 @@ app.get('/auth/callback', async(req, res) => {
         const shopData = await Shopify.Auth.validateAuthCallback(
             req,
             res,
-            req.query
+            req.query,
         );
         //console.log(shopData);
         // save shop data to database
@@ -77,17 +83,15 @@ app.get('/auth/callback', async(req, res) => {
                 });
             }    
             // set webhooks
-            if(settings.webhooks.length > 0){
-                let webhooks = settings.webhooks;
-                webhooks.forEach(async(item) => {
-                    let webhookData = {
-                        'webhook': {
-                            'topic': item.topic,
-                            'address': process.env.APP_URL + item.address,
-                            'format': 'json'
-                        }
-                    };
-                    await client.post({ path: 'webhooks', data : webhookData, type: DataType.JSON });
+            let webhooks = settings.webhooks;
+            if(webhooks.length > 0){                
+                webhooks.forEach(async(topic) => {
+                    await Shopify.Webhooks.Registry.register({
+                        path: '/webhooks',
+                        topic: topic,
+                        accessToken: shopData.accessToken,
+                        shop: shopData.shop,
+                      });                    
                 });
             }
             // set app billing
@@ -103,8 +107,16 @@ app.get('/auth/callback', async(req, res) => {
     }
 });
 
-// run server
+// webhook route
+app.post('/webhooks', async (req, res) => {
+    try {
+      await Shopify.Webhooks.Registry.process(req, res);
+    } catch (error) {
+      console.log(error);
+    }
+});
 
+// run server
 const start = (port) => {
     try {
        //connect to database
