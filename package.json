@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "Node Express Liquid shopify app frame-work",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "dev": "nodemon app.js"
+    "dev": "nodemon index.js"
   },
   "keywords": [
     "node",
@@ -19,12 +20,9 @@
     "axios": "^0.25.0",
     "cookie-parser": "^1.4.6",
     "express": "^4.17.2",
-    "liquid": "^5.1.1",
-    "liquid-express": "^1.0.0",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.1.7",
-    "nonce": "^1.0.4",
-    "querystring": "^0.2.1",
-    "shopify-api-node": "^3.8.1"
+    "querystring": "^0.2.1"
   },
   "devDependencies": {
     "dotenv": "^14.2.0",
